@@ -24,12 +24,11 @@ def initGrid(n):
 def updateGrid(grid, birthProb, majorProb):
   pass
 
-# TODO: print as EM, Rm, RM, Bm, BM (Rm -> minor, M -> major)
 def printGrid(grid):
   (r, c) = grid.shape
   for i in range(r):
     for j in range(c):
-      print "%d " % grid[i][j], # comma suppresses newline
+      print "%s " % cellPrinting(grid[i][j]), # comma suppresses newline
     print
 
 
@@ -44,6 +43,16 @@ def getCellType(x):
     3: "BLUEMINOR",
     4: "BLUEMAJOR",
   }[x]
+
+def cellPrinting(x):
+  return {
+    0: "EM",
+    1: "Rm",
+    2: "RM",
+    3: "Bm",
+    4: "BM"
+  }[x]
+
 
 if __name__ == "__main__":
   main()
