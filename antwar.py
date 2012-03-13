@@ -1,3 +1,4 @@
+from __future__ import division
 # A simulation of ant warfare modelled as a self-organized critical system.
 # Author: Sophie Dawson
 import numpy, sys, random
@@ -23,6 +24,35 @@ def main():
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, "diag")
     printGrid(grid)
+
+def probTest():
+  if len(sys.argv[1:]) != 4:
+    usage()
+    sys.exit(1)
+  grid = initGrid(int(sys.argv[1]))
+  birthProb = float(sys.argv[2])
+  majorProb = float(sys.argv[3])
+  noOfSteps = int(sys.argv[4])
+  
+  blueAnts = 0
+  redAnts = 0
+  empty = 0
+  for i in range(noOfSteps):
+    res = maybePopulateCell(birthProb, majorProb)
+    #print "res: %s" % getCellType(res)
+    if res == BLUEMAJOR or res == BLUEMINOR:
+      blueAnts = blueAnts + 1
+    elif res == REDMAJOR or res == REDMINOR:
+      redAnts = redAnts + 1
+    else:
+      empty = empty + 1
+  print "red: %d" % redAnts
+  print "blue: %d" % blueAnts
+  print "red/no of steps: %f" % (redAnts / noOfSteps)
+  print "blue/no of steps: %f" % (blueAnts / noOfSteps)
+  print "empty: %d" % empty
+  print "# of steps: %d" % noOfSteps
+  print "empty + r + b: %d" % (empty + redAnts + blueAnts)
 
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
@@ -164,4 +194,5 @@ def cellPrinting(x):
 
 
 if __name__ == "__main__":
-  main()
+  #main()
+  probTest()
