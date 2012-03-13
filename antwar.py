@@ -19,8 +19,8 @@ def main():
   noOfSteps = int(sys.argv[4])
 
   printGrid(grid)
-  print genCheckList(grid, 5, 5, "nondiag")
-  print genCheckList(grid, 5, 5, "diag")
+  print genCheckList(grid, 0, 5, "nondiag")
+  print genCheckList(grid, 0, 5, "diag")
   sys.exit(0)
 
   for i in range(noOfSteps):
@@ -82,32 +82,10 @@ def genCheckList(grid, r, c, check):
   cells = []
   if r == 0:
     cells.append((r+1, c))
-    if c == 0:
-      cells.append((r, c+1))
-      if check == "diag":
-        cells.append((r+1, c+1))
-    elif c == maxc - 1:
-      cells.append((r, c-1))
-      if check == "diag":
-        cells.append((r+1, c-1))
-    else:
-      cells.extend([(r, c-1), (r, c+1)])
-      if check == "diag":
-        cells.extend([(r+1, c-1), (r+1, c+1)])
+    addColCells(grid, cells, r, c, r+1, check)
   elif r == maxr - 1:
     cells.append((r-1, c))
-    if c == 0:
-      cells.append((r, c+1))
-      if check == "diag":
-        cells.append((r-1, c+1))
-    elif c == maxc - 1:
-      cells.append((r, c-1))
-      if check == "diag":
-        cells.append((r-1, c-1))
-    else:
-      cells.extend([(r, c-1), (r, c+1)])
-      if check == "diag":
-        cells.extend([(r-1, c-1), (r-1, c+1)])
+    addColCells(grid, cells, r, c, r-1, check)
   else:
     if check == "diag":
       cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c),
@@ -116,7 +94,8 @@ def genCheckList(grid, r, c, check):
       cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c)])
   return cells
 
-def addColCells(cells, r, c, offsetRow):
+def addColCells(grid, cells, r, c, offsetRow, check):
+  (maxr, maxc) = grid.shape
   if c == 0:
     cells.append((r, c+1))
     if check == "diag":
