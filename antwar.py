@@ -1,6 +1,13 @@
 # A simulation of ant warfare modelled as a self-organized critical system.
 # Author: Sophie Dawson
-import numpy, sys
+import numpy, sys, random
+
+# Cell constants
+EMPTY = 0
+REDMINOR = 1
+REDMAJOR = 2
+BLUEMINOR = 3
+BLUEMAJOR = 4
 
 def main():
   if len(sys.argv[1:]) != 4:
@@ -15,14 +22,52 @@ def main():
   sys.exit(0)
 
   for i in range(noOfSteps):
-    updateGrid(grid, birthProb, majorProb)
+    grid = updateGrid(grid, birthProb, majorProb)
     printGrid(grid)
 
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
 
+# Grid is updated destructively, so a new copy
+# of the grid is returned
 def updateGrid(grid, birthProb, majorProb):
+  newGrid = grid.copy()
+  (r, c) = grid.shape
+  for i in range(r):
+    for j in range(c):
+      if grid[i][j] == EMPTY:
+        newGrid[i][j] = maybePopulateCell(birthProb, majorProb)
+      elif grid[i][j] == REDMINOR or grid[i][j] == BLUEMINOR:
+        newGrid[i][j] = updateMinorCell(grid, i, j)
+      else:
+        newGrid[i][j] = updateMajorCell(grid, i, j)
+
+def updateMinorCell(grid, r, c):
   pass
+
+def updateMajorCell(grid, r, c):
+  pass
+
+def maybePopulateCell(birthProb, majorProb):
+  birthRand = random.random()
+  if birthRand < birthProb:
+    # Ant is born/cell is populated
+    majorRand = random.random()
+    if majorRand < majorProb:
+      # Determine side r/b
+      # is a major
+      if random.random() < 0.5:
+        return BLUEMAJOR
+      else:
+        return REDMAJOR
+    else:
+      if random.random() < 0.5:
+        return BLUEMINOR
+      else:
+        return REDMINOR
+      # is a minor
+  else:
+    return EMPTY
 
 def printGrid(grid):
   (r, c) = grid.shape
