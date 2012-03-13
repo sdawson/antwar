@@ -38,9 +38,10 @@ def updateGrid(grid, birthProb, majorProb, check="nodiag"):
   for i in range(r):
     for j in range(c):
       if grid[i][j] == EMPTY:
-        print
+        print "EMPTY cell at (%d, %d)\n" % (i, j)
         newGrid[i][j] = maybePopulateCell(birthProb, majorProb)
       else:
+        print "FILLED cell at (%d, %d)\n" % (i, j)
         newGrid[i][j] = updateCell(grid, i, j, check)
   #print "old grid:\n"
   #printGrid(grid)
@@ -67,8 +68,10 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
   print "%%%%%%%%surround for (%d, %d)\n" % (r, c)
-  for (i, j) in genCheckList(grid, r, c, check):
-    print "+checking (%d, %d)\n" % (i, j)
+  checkList = genCheckList(grid, r, c, check)
+  print "+++check list", checkList, "\n"
+  for (i, j) in checkList: # genCheckList(grid, r, c, check):
+    #print "+checking (%d, %d)\n" % (i, j)
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
@@ -87,36 +90,43 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
 # whether diagonal cells should be checked or not.
 def genCheckList(grid, r, c, check):
   (maxr, maxc) = grid.shape
-  print "grid shape: (%d, %d)\n" % (maxr, maxc)
   cells = []
   if r == 0:
     cells.append((r+1, c))
-    addColCells(grid, cells, r, c, r+1, check)
+    addColCells(grid, cells, r, c, [r+1], check)
   elif r == maxr - 1:
     cells.append((r-1, c))
-    addColCells(grid, cells, r, c, r-1, check)
+    addColCells(grid, cells, r, c, [r-1], check)
   else:
     if check == "diag":
-      cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c),
-        (r-1, c-1), (r-1, c+1), (r+1, c-1), (r+1, c+1)])
+      cells.extend([(r-1, c), (r+1, c)])
+      addColCells(grid, cells, r, c, [r-1, r+1], check)
+      #cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c),
+      #  (r-1, c-1), (r-1, c+1), (r+1, c-1), (r+1, c+1)])
     else:
-      cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c)])
+      cells.extend([(r-1, c), (r+1, c)])
+      addColCells(grid, cells, r, c, [r-1, r+1], check)
+      #cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c)])
   return cells
 
 def addColCells(grid, cells, r, c, offsetRow, check):
   (maxr, maxc) = grid.shape
+  print "max col: %d\tcurrent cell: %d\n" % (maxc, c)
   if c == 0:
     cells.append((r, c+1))
     if check == "diag":
-      cells.append((offsetRow, c+1))
+      for row in offsetRow:
+        cells.append((row, c+1))
   elif c == maxc - 1:
     cells.append((r, c-1))
     if check == "diag":
-      cells.append((offsetRow, c-1))
+      for row in offsetRow:
+        cells.append((row, c-1))
   else:
     cells.extend([(r, c-1), (r, c+1)])
     if check == "diag":
-      cells.extend([(offsetRow, c-1), (offsetRow, c+1)])
+      for row in offsetRow:
+        cells.extend([(row, c-1), (row, c+1)])
 
 def maybePopulateCell(birthProb, majorProb):
   birthRand = random.random()
