@@ -34,25 +34,22 @@ def probTest():
   majorProb = float(sys.argv[3])
   noOfSteps = int(sys.argv[4])
   
-  blueAnts = 0
-  redAnts = 0
+  major = 0
+  minor = 0
   empty = 0
   for i in range(noOfSteps):
     res = maybePopulateCell(birthProb, majorProb)
-    #print "res: %s" % getCellType(res)
-    if res == BLUEMAJOR or res == BLUEMINOR:
-      blueAnts = blueAnts + 1
-    elif res == REDMAJOR or res == REDMINOR:
-      redAnts = redAnts + 1
+    if res == BLUEMAJOR or res == REDMAJOR:
+      major = major + 1
+    elif res == BLUEMINOR or res == REDMINOR:
+      minor = minor + 1
     else:
       empty = empty + 1
-  print "red: %d" % redAnts
-  print "blue: %d" % blueAnts
-  print "red/no of steps: %f" % (redAnts / noOfSteps)
-  print "blue/no of steps: %f" % (blueAnts / noOfSteps)
   print "empty: %d" % empty
   print "# of steps: %d" % noOfSteps
-  print "empty + r + b: %d" % (empty + redAnts + blueAnts)
+  print "major/no of steps: %f" % (major / noOfSteps)
+  print "minor/no of steps: %f" % (minor / noOfSteps)
+  print "empty + M + m: %d" % (empty + major + minor)
 
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
