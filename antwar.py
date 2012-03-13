@@ -19,11 +19,15 @@ def main():
   majorProb = float(sys.argv[3])
   noOfSteps = int(sys.argv[4])
 
-  printGrid(grid)
+  stats = [0, 0] # (no. of major deaths, no. of minor deaths)
 
   for i in range(noOfSteps):
-    grid = updateGrid(grid, birthProb, majorProb, "diag")
-    printGrid(grid)
+    grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
+    #printGrid(grid)
+  print "major deaths: %d" % stats[0]
+  print "minor deaths: %d" % stats[1]
+  print "s+: %f" % (stats[0] / noOfSteps)
+  print "s-: %f" % (stats[1] / noOfSteps)
 
 def probTest():
   if len(sys.argv[1:]) != 4:
@@ -56,7 +60,7 @@ def initGrid(n):
 
 # Grid is updated destructively, so a new copy
 # of the grid is returned
-def updateGrid(grid, birthProb, majorProb, check="nodiag"):
+def updateGrid(grid, birthProb, majorProb, stats, check="nodiag"):
   newGrid = grid.copy()
   (r, c) = grid.shape
   for i in range(r):
@@ -64,17 +68,19 @@ def updateGrid(grid, birthProb, majorProb, check="nodiag"):
       if grid[i][j] == EMPTY:
         newGrid[i][j] = maybePopulateCell(birthProb, majorProb)
       else:
-        newGrid[i][j] = updateCell(grid, i, j, check)
+        newGrid[i][j] = updateCell(grid, i, j, stats, check)
   return newGrid
 
-def updateCell(grid, r, c, check):
+def updateCell(grid, r, c, stats, check):
   if grid[r][c] == REDMINOR or grid[r][c] == BLUEMINOR:
     if isDeathCondition(grid, r, c, check, 1, 1):
+      stats[1] = stats[1] + 1 # +1 to no. of minor ant deaths
       return EMPTY
     else:
       return grid[r][c]
   elif grid[r][c] == REDMAJOR or grid[r][c] == BLUEMAJOR:
     if isDeathCondition(grid, r, c, check, 4, 1):
+      stats[0] = stats[0] + 1 # +1 to no. of major ant deaths
       return EMPTY
     else:
       return grid[r][c]
@@ -122,7 +128,6 @@ def genCheckList(grid, r, c, check):
 
 def addColCells(grid, cells, r, c, offsetRow, check):
   (maxr, maxc) = grid.shape
-  print "max col: %d\tcurrent cell: %d\n" % (maxc, c)
   if c == 0:
     cells.append((r, c+1))
     if check == "diag":
@@ -182,7 +187,7 @@ def getCellType(x):
 
 def cellPrinting(x):
   return {
-    0: "EM",
+    0: "EY",
     1: "Rm",
     2: "RM",
     3: "Bm",
@@ -191,5 +196,4 @@ def cellPrinting(x):
 
 
 if __name__ == "__main__":
-  #main()
-  probTest()
+  main()
