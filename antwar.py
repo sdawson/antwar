@@ -19,12 +19,9 @@ def main():
   noOfSteps = int(sys.argv[4])
 
   printGrid(grid)
-  #print genCheckList(grid, 0, 5, "nondiag")
-  #print genCheckList(grid, 0, 5, "diag")
-  #sys.exit(0)
 
   for i in range(noOfSteps):
-    grid = updateGrid(grid, birthProb, majorProb)
+    grid = updateGrid(grid, birthProb, majorProb, "diag")
     printGrid(grid)
 
 def initGrid(n):
@@ -38,15 +35,9 @@ def updateGrid(grid, birthProb, majorProb, check="nodiag"):
   for i in range(r):
     for j in range(c):
       if grid[i][j] == EMPTY:
-        print "EMPTY cell at (%d, %d)\n" % (i, j)
         newGrid[i][j] = maybePopulateCell(birthProb, majorProb)
       else:
-        print "FILLED cell at (%d, %d)\n" % (i, j)
         newGrid[i][j] = updateCell(grid, i, j, check)
-  #print "old grid:\n"
-  #printGrid(grid)
-  #print "new grid:\n"
-  #printGrid(newGrid)
   return newGrid
 
 def updateCell(grid, r, c, check):
@@ -67,11 +58,7 @@ def updateCell(grid, r, c, check):
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
-  print "%%%%%%%%surround for (%d, %d)\n" % (r, c)
-  checkList = genCheckList(grid, r, c, check)
-  print "+++check list", checkList, "\n"
-  for (i, j) in checkList: # genCheckList(grid, r, c, check):
-    #print "+checking (%d, %d)\n" % (i, j)
+  for (i, j) in genCheckList(grid, r, c, check):
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
@@ -101,12 +88,9 @@ def genCheckList(grid, r, c, check):
     if check == "diag":
       cells.extend([(r-1, c), (r+1, c)])
       addColCells(grid, cells, r, c, [r-1, r+1], check)
-      #cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c),
-      #  (r-1, c-1), (r-1, c+1), (r+1, c-1), (r+1, c+1)])
     else:
       cells.extend([(r-1, c), (r+1, c)])
       addColCells(grid, cells, r, c, [r-1, r+1], check)
-      #cells.extend([(r, c-1), (r, c+1), (r-1, c), (r+1, c)])
   return cells
 
 def addColCells(grid, cells, r, c, offsetRow, check):
