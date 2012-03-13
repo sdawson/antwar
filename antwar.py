@@ -19,9 +19,9 @@ def main():
   noOfSteps = int(sys.argv[4])
 
   printGrid(grid)
-  print genCheckList(grid, 0, 5, "nondiag")
-  print genCheckList(grid, 0, 5, "diag")
-  sys.exit(0)
+  #print genCheckList(grid, 0, 5, "nondiag")
+  #print genCheckList(grid, 0, 5, "diag")
+  #sys.exit(0)
 
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb)
@@ -38,9 +38,15 @@ def updateGrid(grid, birthProb, majorProb, check="nodiag"):
   for i in range(r):
     for j in range(c):
       if grid[i][j] == EMPTY:
+        print
         newGrid[i][j] = maybePopulateCell(birthProb, majorProb)
       else:
         newGrid[i][j] = updateCell(grid, i, j, check)
+  #print "old grid:\n"
+  #printGrid(grid)
+  #print "new grid:\n"
+  #printGrid(newGrid)
+  return newGrid
 
 def updateCell(grid, r, c, check):
   if grid[r][c] == REDMINOR or grid[r][c] == BLUEMINOR:
@@ -60,7 +66,9 @@ def updateCell(grid, r, c, check):
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
+  print "%%%%%%%%surround for (%d, %d)\n" % (r, c)
   for (i, j) in genCheckList(grid, r, c, check):
+    print "+checking (%d, %d)\n" % (i, j)
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
@@ -79,6 +87,7 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
 # whether diagonal cells should be checked or not.
 def genCheckList(grid, r, c, check):
   (maxr, maxc) = grid.shape
+  print "grid shape: (%d, %d)\n" % (maxr, maxc)
   cells = []
   if r == 0:
     cells.append((r+1, c))
@@ -136,6 +145,7 @@ def printGrid(grid):
     for j in range(c):
       print "%s " % cellPrinting(grid[i][j]), # comma suppresses newline
     print
+  print "\n"
 
 def usage():
   print "python antwar.py gridsize birthprob majorprob noofsteps"
