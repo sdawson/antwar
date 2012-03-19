@@ -110,16 +110,16 @@ def fillAntDeathCell(grid, r, c, winAntType, birthProb, majorProb):
   if winAntType == "minor" and getCellColour(grid[r][c]) == "RED":
     # Fill the cell with an ant of the opposite colour
     print "maybe filling with a blue minor"
-    return maybePopulateCell(birthProb, majorProb, BLUEMINOR)
+    return maybeFillWinnerCell(birthProb, majorProb, BLUEMINOR)
   elif winAntType == "minor" and getCellColour(grid[r][c]) == "BLUE":
     print "maybe filling with a red minor"
-    return maybePopulateCell(birthProb, majorProb, REDMINOR)
+    return maybeFillWinnerCell(birthProb, majorProb, REDMINOR)
   elif winAntType == "major" and getCellColour(grid[r][c]) == "RED":
     print "maybe filling with a blue major"
-    return maybePopulateCell(birthProb, majorProb, BLUEMAJOR)
+    return maybeFillWinnerCell(birthProb, majorProb, BLUEMAJOR)
   else:
     print "maybe filling with a red major"
-    return maybePopulateCell(birthProb, majorProb, REDMAJOR)
+    return maybeFillWinnerCell(birthProb, majorProb, REDMAJOR)
 
 # And type should be returned, or "" (== False?)
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
@@ -188,7 +188,7 @@ def addColCells(grid, cells, r, c, offsetRow, check):
 # and major ant probability.  The optional type argument
 # is used to populate a cell when the ant type (red/blue)
 # is known in advance.  This only occurs after an ant death.
-def maybePopulateCell(birthProb, majorProb, type=EMPTY):
+def maybePopulateCell(birthProb, majorProb):
   birthRand = random.random()
   if birthRand < birthProb:
     # Ant is born/cell is populated
@@ -196,26 +196,33 @@ def maybePopulateCell(birthProb, majorProb, type=EMPTY):
     if majorRand < majorProb:
       # Determine side r/b
       # is a major
-      if getCellColour(type) == "BLUE":
-        return BLUEMAJOR
-      elif getCellColour(type) == "RED":
-        return REDMAJOR
-
       if random.random() < 0.5:
         return BLUEMAJOR
       else:
         return REDMAJOR
     else:
-      if getCellColour(type) == "BLUE":
-        return BLUEMINOR
-      elif getCellColour(type) == "RED":
-        return REDMINOR
-
       if random.random() < 0.5:
         return BLUEMINOR
       else:
         return REDMINOR
       # is a minor
+  else:
+    return EMPTY
+
+def maybeFillWinnerCell(birthProb, majorProb, type):
+  birthRand = random.random()
+  if birthRand < birthProb:
+    majorRand = random.random()
+    if type == BLUEMAJOR and majorRand < majorProb:
+      return BLUEMAJOR
+    elif type == BLUEMINOR and majorRand >= majorProb:
+      return BLUEMINOR
+    elif type == REDMAJOR and majorRand < majorProb:
+      return REDMAJOR
+    elif type == REDMINOR and majorRand >= majorProb:
+      return REDMINOR
+    else:
+      return EMPTY
   else:
     return EMPTY
 
