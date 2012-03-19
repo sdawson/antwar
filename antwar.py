@@ -63,7 +63,7 @@ def cornerCaseTest():
   print "init grid"
   printGrid(grid)
   print isDeathCondition(grid, 4, 0, "diag", 1, 1)
-  print updateCell(grid, 4, 0, [0.5, 0.25], "diag")
+  print updateCell(grid, 4, 0, [0, 0], 0.5, 0.25, "diag")
 
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
@@ -78,16 +78,16 @@ def updateGrid(grid, birthProb, majorProb, stats, check="nodiag"):
       if grid[i][j] == EMPTY:
         newGrid[i][j] = maybePopulateCell(birthProb, majorProb)
       else:
-        newGrid[i][j] = updateCell(grid, i, j, stats, check)
+        newGrid[i][j] = updateCell(grid, i, j, stats, birthProb, majorProb, check)
   return newGrid
 
-def updateCell(grid, r, c, stats, check):
+def updateCell(grid, r, c, stats, birthProb, majorProb, check):
   if grid[r][c] == REDMINOR or grid[r][c] == BLUEMINOR:
     isDeath = isDeathCondition(grid, r, c, check, 1, 1)
     if isDeath:
       print "cell(%d, %d): killed by %s" % (r, c, isDeath)
       stats[1] = stats[1] + 1 # +1 to no. of minor ant deaths
-      return fillAntDeathCell(grid, r, c, isDeath)
+      return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
     else:
       return grid[r][c]
   elif grid[r][c] == REDMAJOR or grid[r][c] == BLUEMAJOR:
@@ -95,7 +95,7 @@ def updateCell(grid, r, c, stats, check):
     if isDeath:
       print "cell(%d, %d): killed by %s" % (r, c, isDeath)
       stats[0] = stats[0] + 1 # +1 to no. of major ant deaths
-      return fillAntDeathCell(grid, r, c, isDeath)
+      return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
     else:
       return grid[r][c]
   else:
@@ -106,19 +106,27 @@ def updateCell(grid, r, c, stats, check):
 # the cell should be filled with minors, majors or made empty.
 # Cell will be filled with majors with probability pf, and
 # minors with probability p(1-f)
-def fillAntDeathCell(grid, r, c, winAntType):
-  if winAntType == "minor":
-    return EMPTY
-  elif winAntType == "major":
-    return EMPTY
+def fillAntDeathCell(grid, r, c, winAntType, birthProb, majorProb):
+  if winAntType == "minor" and getCellColour(grid[r][c]) == "RED":
+    # Fill the cell with an ant of the opposite colour
+    print "maybe filling with a blue minor"
+    return maybePopulateCell(birthProb, majorProb, BLUEMINOR)
+  elif winAntType == "minor" and getCellColour(grid[r][c]) == "BLUE":
+    print "maybe filling with a red minor"
+    return maybePopulateCell(birthProb, majorProb, REDMINOR)
+  elif winAntType == "major" and getCellColour(grid[r][c]) == "RED":
+    print "maybe filling with a blue major"
+    return maybePopulateCell(birthProb, majorProb, BLUEMAJOR)
   else:
-    return EMPTY
+    print "maybe filling with a red major"
+    return maybePopulateCell(birthProb, majorProb, REDMAJOR)
 
 # And type should be returned, or "" (== False?)
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
   for (i, j) in genCheckList(grid, r, c, check):
+    # TODO: UPDATE for use of the getCellColour function
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
@@ -180,7 +188,7 @@ def addColCells(grid, cells, r, c, offsetRow, check):
 # and major ant probability.  The optional type argument
 # is used to populate a cell when the ant type (red/blue)
 # is known in advance.  This only occurs after an ant death.
-def maybePopulateCell(birthProb, majorProb, type=None):
+def maybePopulateCell(birthProb, majorProb, type=EMPTY):
   birthRand = random.random()
   if birthRand < birthProb:
     # Ant is born/cell is populated
@@ -188,9 +196,9 @@ def maybePopulateCell(birthProb, majorProb, type=None):
     if majorRand < majorProb:
       # Determine side r/b
       # is a major
-      if type == "blue":
+      if getCellColour(type) == "BLUE":
         return BLUEMAJOR
-      elif type == "red":
+      elif getCellColour(type) == "RED":
         return REDMAJOR
 
       if random.random() < 0.5:
@@ -198,9 +206,9 @@ def maybePopulateCell(birthProb, majorProb, type=None):
       else:
         return REDMAJOR
     else:
-      if type == "blue":
+      if getCellColour(type) == "BLUE":
         return BLUEMINOR
-      elif type == "red":
+      elif getCellColour(type) == "RED":
         return REDMINOR
 
       if random.random() < 0.5:
@@ -219,6 +227,15 @@ def printGrid(grid):
     print
   print "\n"
 
+# Returns the colour of a grid cell as a string
+#def getCellColour(grid, r, c):
+#  if grid[r][c] == EMPTY:
+#    return "EMPTY"
+#  elif grid[r][c] == BLUEMINOR or grid[r][c] == BLUEMAJOR:
+#    return "BLUE"
+#  else:
+#    return "RED"
+
 def usage():
   print "python antwar.py gridsize birthprob majorprob noofsteps"
 
@@ -228,7 +245,16 @@ def getCellType(x):
     1: "REDMINOR",
     2: "REDMAJOR",
     3: "BLUEMINOR",
-    4: "BLUEMAJOR",
+    4: "BLUEMAJOR"
+  }[x]
+
+def getCellColour(x):
+  return {
+    0: "EMPTY",
+    1: "RED",
+    2: "RED",
+    3: "BLUE",
+    4: "BLUE"
   }[x]
 
 def cellPrinting(x):
