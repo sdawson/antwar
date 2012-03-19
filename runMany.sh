@@ -4,6 +4,12 @@
 filename="antsim-`date "+%Y%m%d%H%M"`.out"
 
 touch $filename
-for i in `seq 1 1000`:
-  echo "Ma D\tMi D\ts+\ts-" >> $filename
-  python2 antwar.py 10 .5 .25 10000 >> $filename
+echo "10x10 grid, p = 0.03, f = 0.21, 1000 steps" >> $filename
+echo -e "Ma D\tMi D\ts+\ts-" >> $filename
+
+for i in `seq 1 1000`
+do
+  echo "running simulation $i..."
+  python2 antwar.py 10 .03 .21 1000 >> $filename
+done
+echo "Output in: $filename"
