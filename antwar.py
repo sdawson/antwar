@@ -23,11 +23,9 @@ def main():
 
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
-    printGrid(grid)
-  print "major deaths: %d" % stats[0]
-  print "minor deaths: %d" % stats[1]
-  print "s+: %f" % (stats[0] / noOfSteps)
-  print "s-: %f" % (stats[1] / noOfSteps)
+    #printGrid(grid)
+  # Major Deaths\t Minor Deaths\t S+\t S-
+  print "%d\t%d\t%f\t%f" % (stats[0], stats[1], stats[0]/noOfSteps, stats[1]/noOfSteps)
 
 def probTest():
   if len(sys.argv[1:]) != 4:
@@ -85,7 +83,6 @@ def updateCell(grid, r, c, stats, birthProb, majorProb, check):
   if grid[r][c] == REDMINOR or grid[r][c] == BLUEMINOR:
     isDeath = isDeathCondition(grid, r, c, check, 1, 1)
     if isDeath:
-      print "cell(%d, %d): killed by %s" % (r, c, isDeath)
       stats[1] = stats[1] + 1 # +1 to no. of minor ant deaths
       return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
     else:
@@ -93,7 +90,6 @@ def updateCell(grid, r, c, stats, birthProb, majorProb, check):
   elif grid[r][c] == REDMAJOR or grid[r][c] == BLUEMAJOR:
     isDeath = isDeathCondition(grid, r, c, check, 4, 1)
     if isDeath:
-      print "cell(%d, %d): killed by %s" % (r, c, isDeath)
       stats[0] = stats[0] + 1 # +1 to no. of major ant deaths
       return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
     else:
@@ -109,16 +105,12 @@ def updateCell(grid, r, c, stats, birthProb, majorProb, check):
 def fillAntDeathCell(grid, r, c, winAntType, birthProb, majorProb):
   if winAntType == "minor" and getCellColour(grid[r][c]) == "RED":
     # Fill the cell with an ant of the opposite colour
-    print "maybe filling with a blue minor"
     return maybeFillWinnerCell(birthProb, majorProb, BLUEMINOR)
   elif winAntType == "minor" and getCellColour(grid[r][c]) == "BLUE":
-    print "maybe filling with a red minor"
     return maybeFillWinnerCell(birthProb, majorProb, REDMINOR)
   elif winAntType == "major" and getCellColour(grid[r][c]) == "RED":
-    print "maybe filling with a blue major"
     return maybeFillWinnerCell(birthProb, majorProb, BLUEMAJOR)
   else:
-    print "maybe filling with a red major"
     return maybeFillWinnerCell(birthProb, majorProb, REDMAJOR)
 
 # And type should be returned, or "" (== False?)
@@ -275,5 +267,5 @@ def cellPrinting(x):
 
 
 if __name__ == "__main__":
-  #main()
-  cornerCaseTest()
+  main()
+  #cornerCaseTest()
