@@ -23,7 +23,7 @@ def main():
 
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
-    #printGrid(grid)
+    printGrid(grid)
   print "major deaths: %d" % stats[0]
   print "minor deaths: %d" % stats[1]
   print "s+: %f" % (stats[0] / noOfSteps)
@@ -55,6 +55,16 @@ def probTest():
   print "minor/no of steps: %f" % (minor / noOfSteps)
   print "empty + M + m: %d" % (empty + major + minor)
 
+def cornerCaseTest():
+  grid = initGrid(5)
+  grid[4][0] = REDMINOR
+  grid[3][0] = BLUEMAJOR
+  grid[3][1] = BLUEMAJOR
+  print "init grid"
+  printGrid(grid)
+  print isDeathCondition(grid, 4, 0, "diag", 1, 1)
+  print updateCell(grid, 4, 0, [0.5, 0.25], "diag")
+
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
 
@@ -73,21 +83,38 @@ def updateGrid(grid, birthProb, majorProb, stats, check="nodiag"):
 
 def updateCell(grid, r, c, stats, check):
   if grid[r][c] == REDMINOR or grid[r][c] == BLUEMINOR:
-    if isDeathCondition(grid, r, c, check, 1, 1):
+    isDeath = isDeathCondition(grid, r, c, check, 1, 1)
+    if isDeath:
+      print "cell(%d, %d): killed by %s" % (r, c, isDeath)
       stats[1] = stats[1] + 1 # +1 to no. of minor ant deaths
-      return EMPTY
+      return fillAntDeathCell(grid, r, c, isDeath)
     else:
       return grid[r][c]
   elif grid[r][c] == REDMAJOR or grid[r][c] == BLUEMAJOR:
-    if isDeathCondition(grid, r, c, check, 4, 1):
+    isDeath = isDeathCondition(grid, r, c, check, 4, 1)
+    if isDeath:
+      print "cell(%d, %d): killed by %s" % (r, c, isDeath)
       stats[0] = stats[0] + 1 # +1 to no. of major ant deaths
-      return EMPTY
+      return fillAntDeathCell(grid, r, c, isDeath)
     else:
       return grid[r][c]
   else:
     print "Error: invalid cell value %d" % grid[r][c]
     sys.exit(1)
 
+# If a the ants in a cell have died, determines whether
+# the cell should be filled with minors, majors or made empty.
+# Cell will be filled with majors with probability pf, and
+# minors with probability p(1-f)
+def fillAntDeathCell(grid, r, c, winAntType):
+  if winAntType == "minor":
+    return EMPTY
+  elif winAntType == "major":
+    return EMPTY
+  else:
+    return EMPTY
+
+# And type should be returned, or "" (== False?)
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
@@ -104,7 +131,12 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
     elif (grid[r][c] == REDMAJOR
           or grid[r][c] == REDMINOR) and (grid[i][j] == BLUEMINOR):
       minorCount = minorCount + 1
-  return minorCount >= noOfMinors or majorCount >= noOfMajors
+  if minorCount >= noOfMinors:
+    return "minor"
+  elif majorCount >= noOfMajors:
+    return "major"
+  else:
+    return ""
 
 # generates a list of cells to check, based on
 # whether diagonal cells should be checked or not.
@@ -144,7 +176,11 @@ def addColCells(grid, cells, r, c, offsetRow, check):
       for row in offsetRow:
         cells.extend([(row, c-1), (row, c+1)])
 
-def maybePopulateCell(birthProb, majorProb):
+# Populates a cell according to a given birth probability
+# and major ant probability.  The optional type argument
+# is used to populate a cell when the ant type (red/blue)
+# is known in advance.  This only occurs after an ant death.
+def maybePopulateCell(birthProb, majorProb, type=None):
   birthRand = random.random()
   if birthRand < birthProb:
     # Ant is born/cell is populated
@@ -152,11 +188,21 @@ def maybePopulateCell(birthProb, majorProb):
     if majorRand < majorProb:
       # Determine side r/b
       # is a major
+      if type == "blue":
+        return BLUEMAJOR
+      elif type == "red":
+        return REDMAJOR
+
       if random.random() < 0.5:
         return BLUEMAJOR
       else:
         return REDMAJOR
     else:
+      if type == "blue":
+        return BLUEMINOR
+      elif type == "red":
+        return REDMINOR
+
       if random.random() < 0.5:
         return BLUEMINOR
       else:
@@ -196,4 +242,5 @@ def cellPrinting(x):
 
 
 if __name__ == "__main__":
-  main()
+  #main()
+  cornerCaseTest()
