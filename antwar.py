@@ -28,10 +28,10 @@ def main():
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
-    printGrid(grid)
-    if i != noOfSteps-1:
-      time.sleep(.1)
-      os.system('cls' if os.name == 'nt' else 'clear')
+    #printGrid(grid)
+    #if i != noOfSteps-1:
+    #  time.sleep(.1)
+    #  os.system('cls' if os.name == 'nt' else 'clear')
   # Major Deaths\t Minor Deaths\t S+\t S-
   print "%d\t%d\t%d\t%d\t%f\t%f" % (stats["majred"] + stats["majblue"],
                                        stats["minred"] + stats["minblue"],
