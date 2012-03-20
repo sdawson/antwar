@@ -11,7 +11,7 @@ unamestr=`uname`
 
 touch $filename
 echo "10x10 grid, p = $p, f = $f, $steps steps" >> $filename
-echo -e "Ma D\tMi D\ts+\ts-" >> $filename
+echo -e "Ma D\tMi D\tRed D\t Blue D\ts+\ts-" >> $filename
 
 for i in `eval echo {1..1}`
 do

@@ -20,7 +20,10 @@ def main():
   majorProb = float(sys.argv[3])
   noOfSteps = int(sys.argv[4])
 
-  stats = [0, 0] # (no. of major deaths, no. of minor deaths)
+  stats = {"minblue": 0,
+      "minred": 0,
+      "majblue": 0,
+      "majred": 0}
 
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
@@ -30,7 +33,12 @@ def main():
       time.sleep(.1)
       os.system('cls' if os.name == 'nt' else 'clear')
   # Major Deaths\t Minor Deaths\t S+\t S-
-  print "%d\t%d\t%f\t%f" % (stats[0], stats[1], stats[0]/noOfSteps, stats[1]/noOfSteps)
+  print "%d\t%d\t%d\t%d\t%f\t%f" % (stats["majred"] + stats["majblue"],
+                                       stats["minred"] + stats["minblue"],
+                                       stats["minred"] + stats["majred"],
+                                       stats["minblue"] + stats["majblue"],
+                                       (stats["majred"] + stats["majblue"])/noOfSteps,
+                                       (stats["minred"] + stats["minblue"])/noOfSteps)
   colorama.deinit()
 
 def probTest():
@@ -59,16 +67,6 @@ def probTest():
   print "minor/no of steps: %f" % (minor / noOfSteps)
   print "empty + M + m: %d" % (empty + major + minor)
 
-def cornerCaseTest():
-  grid = initGrid(5)
-  grid[4][0] = REDMINOR
-  grid[3][0] = BLUEMAJOR
-  grid[3][1] = BLUEMAJOR
-  print "init grid"
-  printGrid(grid)
-  print isDeathCondition(grid, 4, 0, "diag", 1, 1)
-  print updateCell(grid, 4, 0, [0, 0], 0.5, 0.25, "diag")
-
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
 
@@ -86,17 +84,31 @@ def updateGrid(grid, birthProb, majorProb, stats, check="nodiag"):
   return newGrid
 
 def updateCell(grid, r, c, stats, birthProb, majorProb, check):
-  if grid[r][c] == REDMINOR or grid[r][c] == BLUEMINOR:
+  if grid[r][c] == REDMINOR:
     isDeath = isDeathCondition(grid, r, c, check, 1, 1)
     if isDeath:
-      stats[1] = stats[1] + 1 # +1 to no. of minor ant deaths
+      stats["minred"] = stats["minred"] + 1 # +1 to no. of minor ant deaths
       return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
     else:
       return grid[r][c]
-  elif grid[r][c] == REDMAJOR or grid[r][c] == BLUEMAJOR:
+  elif grid[r][c] == BLUEMINOR:
+    isDeath = isDeathCondition(grid, r, c, check, 1, 1)
+    if isDeath:
+      stats["minblue"] = stats["minblue"] + 1
+      return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
+    else:
+      return grid[r][c]
+  elif grid[r][c] == REDMAJOR:
     isDeath = isDeathCondition(grid, r, c, check, 4, 1)
     if isDeath:
-      stats[0] = stats[0] + 1 # +1 to no. of major ant deaths
+      stats["majred"] = stats["majred"] + 1 # +1 to no. of major ant deaths
+      return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
+    else:
+      return grid[r][c]
+  elif grid[r][c] == BLUEMAJOR:
+    isDeath = isDeathCondition(grid, r, c, check, 4, 1)
+    if isDeath:
+      stats["majblue"] = stats["majblue"] + 1 # +1 to no. of major ant deaths
       return fillAntDeathCell(grid, r, c, isDeath, birthProb, majorProb)
     else:
       return grid[r][c]
@@ -257,4 +269,3 @@ def cellPrinting(x):
 
 if __name__ == "__main__":
   main()
-  #cornerCaseTest()
