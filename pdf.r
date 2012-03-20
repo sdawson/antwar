@@ -4,7 +4,7 @@ rm(list=ls())
 graph_file <- function(infile, outfile) {
   graph_par <- par(las = 0, mar = c(4, 4, 3, 2))
   file_contents <- read.table(infile, skip=2, sep="\t", col.names=c("mad",
-    "mid", "sma", "smi"), dec=".")
+    "mid", "redd", "blued", "sma", "smi"), dec=".")
 
   pdf(file = outfile)
   # Plotting minor ant pdf
