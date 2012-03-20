@@ -6,7 +6,7 @@ filename="antsim-`date "+%Y%m%d%H%M"`.out"
 unamestr=`uname`
 
 touch $filename
-echo "10x10 grid, p = 0.03, f = 0.21, 1000 steps" >> $filename
+echo "10x10 grid, p = 0.43, f = 0.02, 1000 steps" >> $filename
 echo -e "Ma D\tMi D\ts+\ts-" >> $filename
 
 for i in `eval echo {1..1000}`
