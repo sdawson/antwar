@@ -23,7 +23,6 @@ def main():
   stats = [0, 0] # (no. of major deaths, no. of minor deaths)
 
   colorama.init() # Initialize colorama
-  print "noOfSteps:", noOfSteps
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
     printGrid(grid)
@@ -121,10 +120,8 @@ def fillAntDeathCell(grid, r, c, winAntType, birthProb, majorProb):
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
-  print "++++GEN list for (%d, %d)" % (r, c)
   for (i, j) in genCheckList(grid, r, c, check):
     # TODO: UPDATE for use of the getCellColour function
-    print "updating (%d, %d)" % (i, j)
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
@@ -149,14 +146,12 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
 # Treats the grid as a torus
 def genCheckList(grid, r, c, check):
   (maxr, maxc) = grid.shape
-  print "grid shape (%d, %d)" % (maxr, maxc)
   cells = [((r-1) % maxr, c), ((r+1) % maxr, c), (r, (c-1) % maxc), (r, (c+1) % maxc)]
 
   if check == "diag":
     # Add diagonal cells
     cells.extend([((r-1) % maxr, (c-1) % maxc),
       ((r-1) % maxr, (c+1) % maxc), ((r+1) % maxr, (c-1) % maxc), ((r+1) % maxr, (c+1) % maxc)])
-  print "CELLS:", cells
   return cells
 
 # Populates a cell according to a given birth probability
