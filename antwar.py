@@ -26,6 +26,9 @@ def main():
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
     printGrid(grid)
+    if i != noOfSteps-1:
+      time.sleep(.1)
+      os.system('cls' if os.name == 'nt' else 'clear')
   # Major Deaths\t Minor Deaths\t S+\t S-
   print "%d\t%d\t%f\t%f" % (stats[0], stats[1], stats[0]/noOfSteps, stats[1]/noOfSteps)
   colorama.deinit()
@@ -203,7 +206,7 @@ def printGrid(grid):
       if grid[i][j] == EMPTY:
         print colorama.Back.BLACK + " ", # comma suppresses newline
       elif grid[i][j] == REDMINOR:
-        print colorama.Back.RED + " ",
+        print colorama.Back.MAGENTA + " ",
       elif grid[i][j] == REDMAJOR:
         print colorama.Back.RED + " ",
       elif grid[i][j] == BLUEMINOR:
@@ -211,9 +214,6 @@ def printGrid(grid):
       elif grid[i][j] == BLUEMAJOR:
         print colorama.Back.BLUE + " ",
     print colorama.Back.RESET
-  time.sleep(.1)
-  #os.system('cls' if os.name == 'nt' else 'clear')
-  print
 
 # Returns the colour of a grid cell as a string
 #def getCellColour(grid, r, c):
