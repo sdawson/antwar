@@ -1,7 +1,8 @@
 from __future__ import division
 # A simulation of ant warfare modelled as a self-organized critical system.
 # Author: Sophie Dawson
-import numpy, sys, random
+import numpy, sys, random, os, time
+import colorama
 
 # Cell constants
 EMPTY = 0
@@ -21,11 +22,13 @@ def main():
 
   stats = [0, 0] # (no. of major deaths, no. of minor deaths)
 
+  colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
-    #printGrid(grid)
+    printGrid(grid)
   # Major Deaths\t Minor Deaths\t S+\t S-
   print "%d\t%d\t%f\t%f" % (stats[0], stats[1], stats[0]/noOfSteps, stats[1]/noOfSteps)
+  colorama.deinit()
 
 def probTest():
   if len(sys.argv[1:]) != 4:
@@ -222,9 +225,19 @@ def printGrid(grid):
   (r, c) = grid.shape
   for i in range(r):
     for j in range(c):
-      print "%s " % cellPrinting(grid[i][j]), # comma suppresses newline
-    print
-  print "\n"
+      if grid[i][j] == EMPTY:
+        print colorama.Back.BLACK + " ", # comma suppresses newline
+      elif grid[i][j] == REDMINOR:
+        print colorama.Back.RED + " ",
+      elif grid[i][j] == REDMAJOR:
+        print colorama.Back.RED + " ",
+      elif grid[i][j] == BLUEMINOR:
+        print colorama.Back.CYAN + " ",
+      elif grid[i][j] == BLUEMAJOR:
+        print colorama.Back.BLUE + " ",
+    print colorama.Back.RESET
+  time.sleep(.1)
+  os.system('cls' if os.name == 'nt' else 'clear')
 
 # Returns the colour of a grid cell as a string
 #def getCellColour(grid, r, c):
