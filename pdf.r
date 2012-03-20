@@ -1,12 +1,12 @@
 # Clear variables
 rm(list=ls())
 
-graph_file <- function(filename) {
+graph_file <- function(infile, outfile) {
   graph_par <- par(las = 0, mar = c(4, 4, 3, 2))
-  file_contents <- read.table(filename, skip=2, sep="\t", col.names=c("mad",
+  file_contents <- read.table(infile, skip=2, sep="\t", col.names=c("mad",
     "mid", "sma", "smi"), dec=".")
 
-  pdf(file = "p0.5-f0.25-2500steps-nowrap.pdf")
+  pdf(file = outfile)
   # Plotting minor ant pdf
   plot(density(file_contents$smi), axes=FALSE, xlab="", ylab="", main="")
   axis(1)
