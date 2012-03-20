@@ -23,6 +23,7 @@ def main():
   stats = [0, 0] # (no. of major deaths, no. of minor deaths)
 
   colorama.init() # Initialize colorama
+  print "noOfSteps:", noOfSteps
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, majorProb, stats, "diag")
     printGrid(grid)
@@ -120,8 +121,10 @@ def fillAntDeathCell(grid, r, c, winAntType, birthProb, majorProb):
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
+  print "++++GEN list for (%d, %d)" % (r, c)
   for (i, j) in genCheckList(grid, r, c, check):
     # TODO: UPDATE for use of the getCellColour function
+    print "updating (%d, %d)" % (i, j)
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
@@ -143,41 +146,18 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
 
 # generates a list of cells to check, based on
 # whether diagonal cells should be checked or not.
+# Treats the grid as a torus
 def genCheckList(grid, r, c, check):
   (maxr, maxc) = grid.shape
-  cells = []
-  if r == 0:
-    cells.append((r+1, c))
-    addColCells(grid, cells, r, c, [r+1], check)
-  elif r == maxr - 1:
-    cells.append((r-1, c))
-    addColCells(grid, cells, r, c, [r-1], check)
-  else:
-    if check == "diag":
-      cells.extend([(r-1, c), (r+1, c)])
-      addColCells(grid, cells, r, c, [r-1, r+1], check)
-    else:
-      cells.extend([(r-1, c), (r+1, c)])
-      addColCells(grid, cells, r, c, [r-1, r+1], check)
-  return cells
+  print "grid shape (%d, %d)" % (maxr, maxc)
+  cells = [((r-1) % maxr, c), ((r+1) % maxr, c), (r, (c-1) % maxc), (r, (c+1) % maxc)]
 
-def addColCells(grid, cells, r, c, offsetRow, check):
-  (maxr, maxc) = grid.shape
-  if c == 0:
-    cells.append((r, c+1))
-    if check == "diag":
-      for row in offsetRow:
-        cells.append((row, c+1))
-  elif c == maxc - 1:
-    cells.append((r, c-1))
-    if check == "diag":
-      for row in offsetRow:
-        cells.append((row, c-1))
-  else:
-    cells.extend([(r, c-1), (r, c+1)])
-    if check == "diag":
-      for row in offsetRow:
-        cells.extend([(row, c-1), (row, c+1)])
+  if check == "diag":
+    # Add diagonal cells
+    cells.extend([((r-1) % maxr, (c-1) % maxc),
+      ((r-1) % maxr, (c+1) % maxc), ((r+1) % maxr, (c-1) % maxc), ((r+1) % maxr, (c+1) % maxc)])
+  print "CELLS:", cells
+  return cells
 
 # Populates a cell according to a given birth probability
 # and major ant probability.  The optional type argument
@@ -237,7 +217,8 @@ def printGrid(grid):
         print colorama.Back.BLUE + " ",
     print colorama.Back.RESET
   time.sleep(.1)
-  os.system('cls' if os.name == 'nt' else 'clear')
+  #os.system('cls' if os.name == 'nt' else 'clear')
+  print
 
 # Returns the colour of a grid cell as a string
 #def getCellColour(grid, r, c):
