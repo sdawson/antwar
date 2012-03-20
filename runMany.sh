@@ -3,17 +3,17 @@
 
 p=0.43
 f=0.02
-steps=1000
-size=10
+steps=500
+size=20
 filename="antsim-p$p-f$f-steps$steps-size$size-`date "+%Y%m%d%H%M"`.out"
 
 unamestr=`uname`
 
 touch $filename
-echo "10x10 grid, p = $p, f = $f, $steps steps" >> $filename
+echo "${size}x$size grid, p = $p, f = $f, $steps steps" >> $filename
 echo -e "Ma D\tMi D\tRed D\t Blue D\ts+\ts-" >> $filename
 
-for i in `eval echo {1..1}`
+for i in `eval echo {1..1000}`
 do
   if [ "$unamestr" = Linux ]
   then
