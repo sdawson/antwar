@@ -11,28 +11,36 @@ EMPTY = 0
 def main(n):
   grid = numpy.zeros((n, n), dtype=numpy.int)
 
-  print mp.cpu_count()
-  print "orig grid"
-  print grid
+  #print mp.cpu_count()
+  #print "orig grid"
+  #print grid
 
   inds = numpy.rollaxis(numpy.indices(grid.shape), 0, 3).reshape(-1, 2)
-  print inds
+  for [r, c] in inds:
+    print type(r), type(c)
 
   partial_change_cell = partial(change_cell, grid)
-  print "mapping to cpus"
+  #print "mapping to cpus"
   pool = mp.Pool()
   results = pool.map(partial_change_cell, inds)
-  print results
+  grid = combine_res(results, n)
+  #print grid
+  #print results
+
+def combine_res(results, n):
+  new_grid = numpy.zeros((n, n), dtype=numpy.int)
+  for [v, r, c] in results:
+    print type(c), type(r), type(v)
+    new_grid[r][c] = v
+  return new_grid
 
 
 def mult(x):
   return x*x
 
-def change_cell_unpack(matrix, r_c):
-  change_cell(matrix, *r_c)
-
-def change_cell(matrix, *r_c):
-  print "in change cell, process: %d" % os.getpid()
+def change_cell(matrix, r_c):
+  #print "in change cell, process: %d" % os.getpid()
+  [r, c] = r_c
   if matrix[r][c] == EMPTY:
     return [ON, r, c]
   elif matrix[r][c] == OFF:
@@ -41,4 +49,5 @@ def change_cell(matrix, *r_c):
     return [OFF, r, c]
 
 if __name__ == "__main__":
-  main(5)
+  for i in range(1):
+    main(20)
