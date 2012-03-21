@@ -29,7 +29,7 @@ def main():
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, redMajorProb,
-        bluemajorprob, stats, "diag")
+        blueMajorProb, stats, "diag")
     #printGrid(grid)
     #if i != noOfSteps-1:
     #  time.sleep(.1)
@@ -42,32 +42,6 @@ def main():
                                        (stats["majred"] + stats["majblue"])/noOfSteps,
                                        (stats["minred"] + stats["minblue"])/noOfSteps)
   colorama.deinit()
-
-def probTest():
-  if len(sys.argv[1:]) != 4:
-    usage()
-    sys.exit(1)
-  grid = initGrid(int(sys.argv[1]))
-  birthProb = float(sys.argv[2])
-  majorProb = float(sys.argv[3])
-  noOfSteps = int(sys.argv[4])
-  
-  major = 0
-  minor = 0
-  empty = 0
-  for i in range(noOfSteps):
-    res = maybePopulateCell(birthProb, majorProb)
-    if res == BLUEMAJOR or res == REDMAJOR:
-      major = major + 1
-    elif res == BLUEMINOR or res == REDMINOR:
-      minor = minor + 1
-    else:
-      empty = empty + 1
-  print "empty: %d" % empty
-  print "# of steps: %d" % noOfSteps
-  print "major/no of steps: %f" % (major / noOfSteps)
-  print "minor/no of steps: %f" % (minor / noOfSteps)
-  print "empty + M + m: %d" % (empty + major + minor)
 
 def initGrid(n):
   return numpy.zeros((n, n), dtype=numpy.int)
@@ -237,26 +211,8 @@ def printGrid(grid):
         print colorama.Back.BLUE + " ",
     print colorama.Back.RESET
 
-# Returns the colour of a grid cell as a string
-#def getCellColour(grid, r, c):
-#  if grid[r][c] == EMPTY:
-#    return "EMPTY"
-#  elif grid[r][c] == BLUEMINOR or grid[r][c] == BLUEMAJOR:
-#    return "BLUE"
-#  else:
-#    return "RED"
-
 def usage():
   print "python antwar.py gridsize birthprob redmajorprob bluemajorprob noofsteps"
-
-def getCellType(x):
-  return {
-    0: "EMPTY",
-    1: "REDMINOR",
-    2: "REDMAJOR",
-    3: "BLUEMINOR",
-    4: "BLUEMAJOR"
-  }[x]
 
 def getCellColour(x):
   return {
@@ -266,16 +222,6 @@ def getCellColour(x):
     3: "BLUE",
     4: "BLUE"
   }[x]
-
-def cellPrinting(x):
-  return {
-    0: "EY",
-    1: "Rm",
-    2: "RM",
-    3: "Bm",
-    4: "BM"
-  }[x]
-
 
 if __name__ == "__main__":
   main()
