@@ -16,7 +16,7 @@ then
   filename="antsim-p$p-rf$rf-bf$bf-steps$steps-size$size-`date "+%Y%m%d%H%M"`.out"
   touch $filename
   echo "${size}x$size grid, p = $p, redf = $rf, bluef = $bf, $steps steps" >> $filename
-  echo -e "Ma D\tMi D\tRed D\t Blue D\ts+\ts-" >> $filename
+  echo -e "Ma D\tMi D\tRed D\t Blue D\tred s+\tblue s+\ts-" >> $filename
   for i in `eval echo {1..500}`
   do
     if [ "$unamestr" = Linux ]
@@ -50,5 +50,3 @@ then
   done
 echo "Output in: $filename"
 fi
-
-
