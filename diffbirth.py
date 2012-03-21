@@ -30,17 +30,18 @@ def main():
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, redMajorProb,
         blueMajorProb, stats, "diag")
-    #printGrid(grid)
-    #if i != noOfSteps-1:
-    #  time.sleep(.1)
-    #  os.system('cls' if os.name == 'nt' else 'clear')
+    printGrid(grid)
+    if i != noOfSteps-1:
+      time.sleep(.1)
+      os.system('cls' if os.name == 'nt' else 'clear')
   # Major Deaths\t Minor Deaths\t S+\t S-
-  print "%d\t%d\t%d\t%d\t%f\t%f" % (stats["majred"] + stats["majblue"],
-                                       stats["minred"] + stats["minblue"],
-                                       stats["minred"] + stats["majred"],
-                                       stats["minblue"] + stats["majblue"],
-                                       (stats["majred"] + stats["majblue"])/noOfSteps,
-                                       (stats["minred"] + stats["minblue"])/noOfSteps)
+  print "%d\t%d\t%d\t%d\t%f\t%f\t%f" % (stats["majred"] + stats["majblue"],
+                                        stats["minred"] + stats["minblue"],
+                                        stats["minred"] + stats["majred"],
+                                        stats["minblue"] + stats["majblue"],
+                                        stats["majred"]/noOfSteps,
+                                        stats["majblue"]/noOfSteps,
+                                        (stats["minred"] + stats["minblue"])/noOfSteps)
   colorama.deinit()
 
 def initGrid(n):
