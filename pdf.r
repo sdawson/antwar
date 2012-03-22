@@ -15,7 +15,7 @@ graph_file <- function(infile, outfile) {
   plot(density(file_contents$minred), col="orange", axes=FALSE, xlab="", ylab="", main="")
   par(new=TRUE)
   plot(density(file_contents$majred), col="red", axes=FALSE, xlab="", ylab="", main="")
-  legend(x = 150, y = 0.05, c("Blue Minors", "Blue Majors", "Red Minors", "Red Majors"),
+  legend(x = 700, y = 0.10, c("Blue Minors", "Blue Majors", "Red Minors", "Red Majors"),
          col=c("green", "blue", "orange", "red"), lty=1, bty="n")
   axis(1)
   axis(2)
