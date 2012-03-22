@@ -27,27 +27,32 @@ def main():
       redMajorProb, blueMajorProb, noOfSteps, int(sys.argv[1]))
   filename = ''.join([filenamePrefix, currentDate, ".out"])
   print filename
+  f = open(filename, 'w')
 
   #stats = {"minblue": 0,
   #    "minred": 0,
   #    "majblue": 0,
   #    "majred": 0}
 
+  f.write("Step\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     (grid, stats) = updateGrid(grid, birthProb, redMajorProb, blueMajorProb, "diag")
+    f.write("%d\t%d\t%d\t%d\t%d\n" % (i, stats["minblue"],
+      stats["majblue"], stats["minred"], stats["majred"]))
     if isPrintGrid == "print":
       time.sleep(.1)
       os.system('cls' if os.name == 'nt' else 'clear')
       printGrid(grid)
-      print i, stats
+    print i, stats
+  f.close()
   # Major Deaths\t Minor Deaths\t S+\t S-
-  print "%d\t%d\t%d\t%d\t%f\t%f" % (stats["majred"] + stats["majblue"],
-                                       stats["minred"] + stats["minblue"],
-                                       stats["minred"] + stats["majred"],
-                                       stats["minblue"] + stats["majblue"],
-                                       (stats["majred"] + stats["majblue"])/noOfSteps,
-                                       (stats["minred"] + stats["minblue"])/noOfSteps)
+  #print "%d\t%d\t%d\t%d\t%f\t%f" % (stats["majred"] + stats["majblue"],
+  #                                     stats["minred"] + stats["minblue"],
+  #                                     stats["minred"] + stats["majred"],
+  #                                     stats["minblue"] + stats["majblue"],
+  #                                     (stats["majred"] + stats["majblue"])/noOfSteps,
+  #                                     (stats["minred"] + stats["minblue"])/noOfSteps)
   colorama.deinit()
 
 def initGrid(n):
