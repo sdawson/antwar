@@ -23,7 +23,7 @@ def main():
   isPrintGrid = sys.argv[6]
   
   currentDate = datetime.datetime.now().strftime("%Y%m%d%H%M")
-  filenamePrefix = "antsim-p%d-rf%.2f-bf%.2f-steps%d-size%d-" % (birthProb,
+  filenamePrefix = "antsim-p%.2f-rf%.2f-bf%.2f-steps%d-size%d-" % (birthProb,
       redMajorProb, blueMajorProb, noOfSteps, int(sys.argv[1]))
   filename = ''.join([filenamePrefix, currentDate, ".out"])
   print filename
