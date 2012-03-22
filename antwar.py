@@ -30,10 +30,10 @@ def main():
   filenamePrefix = "antsim-p%.3f-rf%.3f-bf%.3f-steps%d-size%d-" % (birthProb,
       redMajorProb, blueMajorProb, noOfSteps, int(sys.argv[1]))
   filename = ''.join([filenamePrefix, currentDate, ".out"])
-  print filename
-  f = open(filename, 'w')
+  #print filename
+  #f = open(filename, 'w')
 
-  f.write("NoOfDeaths\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
+  #f.write("NoOfDeaths\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, redMajorProb, blueMajorProb, fullStats, "diag")
@@ -43,14 +43,14 @@ def main():
       printGrid(grid)
       print i
     if allOneTribe(grid):
-      f.write("%s\t%d" % (getCellColour(grid[0][0]), i))
+      print "%s\t%d" % (getCellColour(grid[0][0]), i)
       break
   #for stati in range(len(fullStats["minblue"])):
   #  if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
   #  or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
   #    f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
   #      fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
-  f.close()
+  #f.close()
   colorama.deinit()
 
 def initGrid(n):
