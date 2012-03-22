@@ -30,10 +30,10 @@ def main():
   filenamePrefix = "antsim-p%.3f-rf%.3f-bf%.3f-steps%d-size%d-" % (birthProb,
       redYoungProb, blueYoungProb, noOfSteps, int(sys.argv[1]))
   filename = ''.join([filenamePrefix, currentDate, ".out"])
-  #print filename
-  #f = open(filename, 'w')
+  print filename
+  f = open(filename, 'w')
 
-  #f.write("NoOfDeaths\toldblueDeath\tyoungblueDeath\toldredDeath\tMajReadDeath\n")
+  f.write("NoOfDeaths\toldblueDeath\tyoungblueDeath\toldredDeath\tyoungredDeath\n")
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, redYoungProb, blueYoungProb, fullStats, "diag")
@@ -42,15 +42,15 @@ def main():
       os.system('cls' if os.name == 'nt' else 'clear')
       printGrid(grid)
       print i
-    if allOneTribe(grid):
-      print "%s\t%d" % (getCellColour(grid[0][0]), i)
-      break
-  #for stati in range(len(fullStats["oldblue"])):
-  #  if fullStats["oldblue"][stati] != 0 or fullStats["youngblue"][stati] != 0 \
-  #  or fullStats["oldred"][stati] != 0 or fullStats["youngred"][stati] !=0:
-  #    f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["oldblue"][stati],
-  #      fullStats["youngblue"][stati], fullStats["oldred"][stati], fullStats["youngred"][stati]))
-  #f.close()
+    #if allOneTribe(grid):
+    #  print "%s\t%d" % (getCellColour(grid[0][0]), i)
+    #  break
+  for stati in range(len(fullStats["oldblue"])):
+    if fullStats["oldblue"][stati] != 0 or fullStats["youngblue"][stati] != 0 \
+    or fullStats["oldred"][stati] != 0 or fullStats["youngred"][stati] !=0:
+      f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["oldblue"][stati],
+        fullStats["youngblue"][stati], fullStats["oldred"][stati], fullStats["youngred"][stati]))
+  f.close()
   colorama.deinit()
 
 def initGrid(n):
@@ -70,10 +70,12 @@ def updateGrid(grid, birthProb,
       else:
         (currentPos, fleeCell) = updateCell(grid, i, j, stepStats, birthProb,
             redYoungProb, blueYoungProb, check)
-        # TODO: if currentpos = empty and there's a fleecell, update both current (i,j),
-        # and the fleecell (put the current i,j value in the fleecell location 1st
-        newGrid[i][j] = updateCell(grid, i, j, stepStats, birthProb,
-            redYoungProb, blueYoungProb, check)
+        if currentPos == EMPTY and fleeCell:
+          (newr, newc) = fleeCell
+          newGrid[newr][newc] = grid[i][j]
+          newGrid[i][j] = EMPTY
+        else:
+          newGrid[i][j] = currentPos
   updatePdfStats(fullStats, stepStats)
   return newGrid
 
