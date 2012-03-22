@@ -5,7 +5,7 @@
 p=0.21
 rf=0.035
 bf=0.04
-steps=2000
+steps=4000
 size=30
 print="noprint"
 

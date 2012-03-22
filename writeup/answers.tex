@@ -50,7 +50,8 @@ repopulating the cell, while a winning major ant has a $pf$ chance.
 
 \item A set of probability density functions for a 30 by 30 cell were taken 
 over 4000 steps of the simulated system.  The resulting graphs for different
-values of $p$ and $f$ are given below:
+values of $p$ and $f$ are given in Figures \ref{partb1fig}, \ref{partb2fig} and 
+\ref{partb3fig} below:
 
 \begin{figure}[h!]
 \centering
@@ -73,21 +74,30 @@ values of $p$ and $f$ are given below:
 \label{partb3fig}
 \end{figure}
 
-\item (0.5, 0.25): Qualitatively, this doesn't appear to allow for either side to be 
-particularly effective.  The majors tend to just stick around, while the 
+\item \textbf{Figure \ref{partb1fig}:}Qualitatively, setting both $p$ and $f$ to
+be high allow either side to be particularly effective. The grid ends up filled 
+with multiple regions for each tribe, but each region is small and their sizes
+fluctuate rapidly.  The majors tend to just stick around, while the 
 smaller numbers of minors means both less minor deaths (pred), and less major 
-deaths (pred), with neither tribe controlling the entire grid.
+deaths (pred), with neither tribe controlling the entire grid.  The region size
+also causes the long tail of major and minor ant deaths seen in the probability
+density function. It is highly likely that major/minor ants end up 
+sitting at the edge of an individual tribal region, so fights happen more often
+in each step.  Note that screenshots of the grid for each regime are also 
+included in Figs \ref{scrot1}, \ref{scrot2} and \ref{scrot3}.
 
-(0.04, 0.12): This chart is startlingly different.  Most obviously, the number 
-of major deaths that occur are very small, which is due to the small 
-probability that a major ant gets born each step.  In addition, this allows the 
-minor ants to form the vast majority of the battlefronts that appear on the 
-grid.  While the simulation runs, the minor ants appear to steadly hold the 
-battlelines in place.  The battlefronts mainly shift only when a major ant ends 
-up at the edge of tribe's region, when it is possible for the major ant to 
-break through the boundaries of the other tribe's region.
+\textbf{Figure \ref{partb2fig}:} This probability density function is very
+different to the one in Figure \ref{partb1fig}.  Most obviously, the number 
+of major deaths that occur are very small, due to the small probability that
+a major ant gets born each step.  In addition, the $p$ and $f$ values allow the
+minor ants to make up the bulk of ants found at the edge of one tribes region.
+While the simulation runs, the minor ants appear to steadly hold the 
+region edges in place.  The edges of each region mainly shift when a major ant
+ends up at the edge, when it is possible for the major ant to 
+break through the boundaries of the enemy tribe's region.
 
-(0.21, 0.04): Different again.  In this case, there are very well defined 
+\textbf{Figure \ref{partb3fig}:} The probability distribution function is
+different again.  In this case, there are very well defined 
 regions of red and blue ants, similar to the 0.04, 0.12 case.  In this 
 situation, there tend to be fewer different regions and as a result each 
 red/blue region is larger.  Again, the minor ants appear to form stable edges 
@@ -98,28 +108,47 @@ death counts for both major and minor ants are low and similar.  This is
 because most of the ants from each tribe aren't located at the edge of a tribal 
 region, so they have no opportunity to get involved in battles with enemy ants.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.0]{partb1scrot1.png}
+\caption{Grid screenshot for $f = 0.25, p = 0.5$}
+\label{scrot1}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.0]{partb2scrot1.png}
+\caption{Grid screenshot for $f = 0.25, p = 0.5$}
+\label{scrot2}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.0]{partb3scrot1.png}
+\caption{Grid screenshot for $f = 0.25, p = 0.5$}
+\label{scrot3}
+\end{figure}
+
 \item Having different f values for the two tribes gives an immediate advantage 
-to one tribe.  In the case where $p = 0.21$, ten 1000 step simulations were 
+to one tribe.  In the case where $p = 0.21$, ten simulations were 
 run, and the number of steps taken for the board to be completely covered by a 
 single tribe were logged then averaged.  The results for different values of 
 $f$ are given below:
-
-\begin{itemize}
-\item For red $f = 0.025$ and blue $f = 0.04$, the board was completely blue 
-after an average of 478.8 steps.
-\item For red $f = 0.01$ and blue $f = 0.04$, the board was blue after an 
-average of  steps.
-\end{itemize}
 
 \begin{center}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 \textbf{$f$} & \textbf{Red $p$} & \textbf{Blue $p$} & \textbf{End Colour} & \# \textbf{Steps} \\ \hline
-0.21 & 0.025 & 0.04 & blue & 478.8 \\ \hline
 0.21 & 0.01 & 0.04 & blue & 280 \\ \hline
-0.21 & 0.035 & 0.04 & blue & 821 \\ \hline
+0.21 & 0.025 & 0.04 & blue & 478.8 \\ \hline
+0.21 & 0.035 & 0.04 & blue & 1428.7 \\ \hline
 \end{tabular}
 \end{center}
+
+From the table, it is clear that as the $f$ values get closer to each other, 
+the likelihood of the grid becoming completely filled by one tribe get much 
+less, so it is possible to run the simulation and encounter 'interesting' 
+behaviour (i.e. a grid containing two sets of battling ant tribes) for longer.
 
 \item Adjusting the simulation to study the behaviour tribes of old and young 
 ants requires some adjustments to the simulation rules.  The adjustments that 
@@ -136,6 +165,6 @@ always
 \item[-]The young ants will flee (if possible) if their cell is surrounded by
 more enemy ants than friendly ants.  Fleeing is defined as moving into a nearby 
 empty square rather than fighting.
+\end{itemize}
 
 \end{enumerate}
-hasdlfkjasd
