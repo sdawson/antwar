@@ -48,10 +48,10 @@ A second adjustment was to repopulate cells emptied when their occupants are
 killed.  In these cases, a winning minor ant has a $p(1-f)$ chance of
 repopulating the cell, while a winning major ant has a $pf$ chance.
 
-\item A set of probability density functions for a 30 by 30 cell were taken 
-over 4000 steps of the simulated system.  The resulting graphs for different
-values of $p$ and $f$ are given in Figures \ref{partb1fig}, \ref{partb2fig} and 
-\ref{partb3fig} below:
+\item A set of probability density functions of deaths per step for a 30 by 30 
+cell system were taken over 4000 steps of the simulated system.  The resulting
+graphs for different values of $p$ and $f$ are given in Figures \ref{partb1fig},
+\ref{partb2fig} and \ref{partb3fig} below. \\
 
 \begin{figure}[h!]
 \centering
@@ -80,34 +80,34 @@ number of ant deaths are much greater than the mean is non-negligable.  This
 suggests that the current rule set allows for pdfs with power-law tails.
 
 \item \textbf{Figure \ref{partb1fig}:} Qualitatively, setting both $p$ and $f$ to
-be high allow either side to be particularly effective. The grid ends up filled 
+be high allows both sides to be equally effective. The grid ends up filled 
 with multiple regions for each tribe, but each region is small and their sizes
-fluctuate rapidly.  The majors tend to just stick around, while the 
-smaller numbers of minors means both less minor deaths (pred), and less major 
-deaths (pred), with neither tribe controlling the entire grid.  The region size
+fluctuate rapidly. As with the $f = 0.12, 
+p = 0.04$ regime, the mean number of minor ant deaths is larger than the number 
+of major ant deaths. Since the regions controlled by each tribe are small, many 
+ants end up fighting enemy ants in nearby regions. The increased strength of 
+the major ants allow them to die less often in a single step. The region size
 also causes the long tail of major and minor ant deaths seen in the probability
-density function. It is highly likely that major/minor ants end up 
-sitting at the edge of an individual tribal region, so fights happen more often
-in each step.  Note that screenshots of the grid for each regime are also 
+density function. Note that screenshots of the grid for each regime are also 
 included in Figs \ref{scrot1}, \ref{scrot2} and \ref{scrot3}.
 
 \textbf{Figure \ref{partb2fig}:} This probability density function is very
 different to the one in Figure \ref{partb1fig}.  Most obviously, the number 
 of major deaths that occur are very small, due to the small probability that
 a major ant gets born each step.  In addition, the $p$ and $f$ values allow the
-minor ants to make up the bulk of ants found at the edge of one tribes region.
+minor ants to make up the bulk of ants found at the edge of one tribe's region.
 While the simulation runs, the minor ants appear to steadly hold the 
-region edges in place.  The edges of each region mainly shift when a major ant
-ends up at the edge, when it is possible for the major ant to 
+region edges in place, and many deaths occur.  The edges of each region usually
+shift when a major ant ends up at the edge, when it is possible for the major ant to 
 break through the boundaries of the enemy tribe's region.
 
 \textbf{Figure \ref{partb3fig}:} The probability distribution function is
 different again.  In this case, there are very well defined 
-regions of red and blue ants, similar to the 0.04, 0.12 case.  In this 
+regions of red and blue ants, similar to the $f = 0.12, p = 0.04$ case.  In this 
 situation, there tend to be fewer different regions and as a result each 
 red/blue region is larger.  Again, the minor ants appear to form stable edges 
 to each region, while major ants born either in the empty lines or the edges of 
-the coloured regions push the battlefronts into new territory.  A further 
+the coloured regions push the edges of their region into the enemy's region.  A further 
 effect of the larger territories occupied by each tribe is that the overall 
 death counts for both major and minor ants are low and similar.  This is 
 because most of the ants from each tribe aren't located at the edge of a tribal 
@@ -171,5 +171,42 @@ always
 more enemy ants than friendly ants.  Fleeing is defined as moving into a nearby 
 empty square rather than fighting.
 \end{itemize}
+
+These rules were simulated for 4000 steps, using the same $f$ and $p$ values as 
+in part 2, then plotted so that the probability density functions could be 
+compared.  In all regimes, it appears that adding the ability for young ants to 
+fight or flee doesn't actually alter the overall chances of dying per step.  
+The visual behaviour of each simulation also resembled the behaviour of the 
+simulations of major and minor ants, although in the $f = 0.12, p = 0.04$ case 
+it seemed like allowing fight-or-flight behaviour cause the edges of each 
+tribe's domain to stay more stable, since the number of fights occuring at the 
+edge of a region was reduced.  Further adjustments to these rules can be made, but
+they are limited by the fact that the current rule set tends to produce very 
+crowded simulations.  This means that there often aren't many cells free for 
+young ants to flee to, so the overall behaviour of the system simply tends 
+towards the original simulations behaviour.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.80]{part5regime1v1.pdf}
+\caption{Probability density function for a young and old simulation with $f = 0.25, p = 0.5$}
+\label{parte1fig}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.80]{part5regime2v1.pdf}
+\caption{Probability density function for a young and old simulation with $f = 
+0.12, p = 0.04$}
+\label{parte2fig}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.80]{part5regime3v1.pdf}
+\caption{Probability density function for a young and old simulation with $f = 
+0.04, p = 0.21$}
+\label{parte3fig}
+\end{figure}
 
 \end{enumerate}

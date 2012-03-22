@@ -30,10 +30,10 @@ def main():
   filenamePrefix = "antsim-p%.3f-rf%.3f-bf%.3f-steps%d-size%d-" % (birthProb,
       redMajorProb, blueMajorProb, noOfSteps, int(sys.argv[1]))
   filename = ''.join([filenamePrefix, currentDate, ".out"])
-  #print filename
-  #f = open(filename, 'w')
+  print filename
+  f = open(filename, 'w')
 
-  #f.write("NoOfDeaths\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
+  f.write("NoOfDeaths\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, redMajorProb, blueMajorProb, fullStats, "diag")
@@ -42,15 +42,15 @@ def main():
       os.system('cls' if os.name == 'nt' else 'clear')
       printGrid(grid)
       print i
-    if allOneTribe(grid):
-      print "%s\t%d" % (getCellColour(grid[0][0]), i)
-      break
-  #for stati in range(len(fullStats["minblue"])):
-  #  if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
-  #  or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
-  #    f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
-  #      fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
-  #f.close()
+    #if allOneTribe(grid):
+    #  print "%s\t%d" % (getCellColour(grid[0][0]), i)
+    #  break
+  for stati in range(len(fullStats["minblue"])):
+    if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
+    or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
+      f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
+        fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
+  f.close()
   colorama.deinit()
 
 def initGrid(n):
@@ -142,12 +142,13 @@ def fillAntDeathCell(grid, r, c, winAntType, birthProb,
   else:
     return maybeFillWinnerCell(birthProb, redMajorProb, REDMAJOR)
 
-# And type should be returned, or "" (== False?)
+# Checks to see if the ants in the specified grid cell die.
+# The minimum number of major/minor ants required to kill the cell
+# are given by noOfMinors and noOfMajors.
 def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
   for (i, j) in genCheckList(grid, r, c, check):
-    #print "checking (%s, %s) for (%s, %s)" % (i, j, r, c)
     if getCellColour(grid[r][c]) == "BLUE" and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
     elif getCellColour(grid[r][c]) == "BLUE" and (grid[i][j] == REDMINOR):
@@ -163,7 +164,7 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   else:
     return ""
 
-# generates a list of cells to check, based on
+# Generates a list of cells to check, based on
 # whether diagonal cells should be checked or not.
 # Treats the grid as a torus
 def genCheckList(grid, r, c, check):
