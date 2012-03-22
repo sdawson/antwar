@@ -52,11 +52,52 @@ repopulating the cell, while a winning major ant has a $pf$ chance.
 over 4000 steps of the simulated system.  The resulting graphs for different
 values of $p$ and $f$ are given below:
 
-\includegraphics{partb1v1.pdf}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.80]{partb1v1.pdf}
+\caption{Probability density function for $f = 0.25, p = 0.5$}
+\label{partb1fig}
+\end{figure}
 
-(0.5, 0.25): Qualitatively, this doesn't appear to allow for either side to be 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.80]{partb2v1.pdf}
+\caption{Probability density function for $f = 0.12, p = 0.04$}
+\label{partb2fig}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.80]{partb3v1.pdf}
+\caption{Probability density function for $f = 0.04, p = 0.21$}
+\label{partb3fig}
+\end{figure}
+
+\item (0.5, 0.25): Qualitatively, this doesn't appear to allow for either side to be 
 particularly effective.  The majors tend to just stick around, while the 
 smaller numbers of minors means both less minor deaths (pred), and less major 
 deaths (pred), with neither tribe controlling the entire grid.
+
+(0.04, 0.12): This chart is startlingly different.  Most obviously, the number 
+of major deaths that occur are very small, which is due to the small 
+probability that a major ant gets born each step.  In addition, this allows the 
+minor ants to form the vast majority of the battlefronts that appear on the 
+grid.  While the simulation runs, the minor ants appear to steadly hold the 
+battlelines in place.  The battlefronts mainly shift only when a major ant ends 
+up at the edge of tribe's region, when it is possible for the major ant to 
+break through the boundaries of the other tribe's region.
+
+(0.21, 0.04): Different again.  In this case, there are very well defined 
+regions of red and blue ants, similar to the 0.04, 0.12 case.  In this 
+situation, there tend to be fewer different regions and as a result each 
+red/blue region is larger.  Again, the minor ants appear to form stable edges 
+to each region, while major ants born either in the empty lines or the edges of 
+the coloured regions push the battlefronts into new territory.  A further 
+effect of the larger territories occupied by each tribe is that the overall 
+death counts for both major and minor ants are low and similar.  This is 
+because most of the ants from each tribe aren't located at the edge of a tribal 
+region, so they have no opportunity to get involved in battles with enemy ants.
+
+\item Having different f values for 
 \end{enumerate}
 hasdlfkjasd
