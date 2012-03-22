@@ -37,10 +37,11 @@ def main():
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
     grid = updateGrid(grid, birthProb, redMajorProb, blueMajorProb, fullStats, "diag")
-    if isPrintGrid == "print":
-      time.sleep(.1)
+    if i % 10 == 0 and isPrintGrid == "print":
+      time.sleep(.2)
       os.system('cls' if os.name == 'nt' else 'clear')
       printGrid(grid)
+      print i
   for stati in range(len(fullStats["minblue"])):
     if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
     or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
@@ -134,7 +135,6 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
   for (i, j) in genCheckList(grid, r, c, check):
-    # TODO: UPDATE for use of the getCellColour function
     if (grid[r][c] == BLUEMAJOR
         or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
