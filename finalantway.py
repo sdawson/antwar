@@ -15,12 +15,16 @@ def main():
   if len(sys.argv[1:]) != 6:
     usage()
     sys.exit(1)
-  grid = initGrid(int(sys.argv[1]))
+  gridSize = int(sys.argv[1])
+  grid = initGrid(gridSize)
   birthProb = float(sys.argv[2])
   redMajorProb = float(sys.argv[3])
   blueMajorProb = float(sys.argv[4])
   noOfSteps = int(sys.argv[5])
   isPrintGrid = sys.argv[6]
+
+  fullStats = {"minblue": [0]*gridSize**2, "minred": [0]*gridSize**2,
+      "majblue": [0]*gridSize**2, "majred": [0]*gridSize**2}
   
   currentDate = datetime.datetime.now().strftime("%Y%m%d%H%M")
   filenamePrefix = "antsim-p%.2f-rf%.2f-bf%.2f-steps%d-size%d-" % (birthProb,
@@ -29,17 +33,19 @@ def main():
   print filename
   f = open(filename, 'w')
 
-  f.write("Step\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
+  f.write("NoOfDeaths\tMinBlueDeath\tMajBlueDeath\tMinRedDeath\tMajReadDeath\n")
   colorama.init() # Initialize colorama
   for i in range(noOfSteps):
-    (grid, stats) = updateGrid(grid, birthProb, redMajorProb, blueMajorProb, "diag")
-    f.write("%d\t%d\t%d\t%d\t%d\n" % (i, stats["minblue"],
-      stats["majblue"], stats["minred"], stats["majred"]))
+    grid = updateGrid(grid, birthProb, redMajorProb, blueMajorProb, fullStats, "diag")
     if isPrintGrid == "print":
       time.sleep(.1)
       os.system('cls' if os.name == 'nt' else 'clear')
       printGrid(grid)
-    print i, stats
+  for stati in range(len(fullStats["minblue"])):
+    if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
+    or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
+      f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
+        fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
   f.close()
   colorama.deinit()
 
@@ -49,25 +55,32 @@ def initGrid(n):
 # Grid is updated destructively, so a new copy
 # of the grid is returned
 def updateGrid(grid, birthProb,
-    redMajorProb, blueMajorProb, check="nodiag"):
+    redMajorProb, blueMajorProb, fullStats, check="nodiag"):
   newGrid = grid.copy()
   (r, c) = grid.shape
-  stats = {"minblue": 0, "minred": 0, "majblue": 0, "majred": 0}
+  stepStats = {"minblue": 0, "minred": 0, "majblue": 0, "majred": 0}
   for i in range(r):
     for j in range(c):
       if grid[i][j] == EMPTY:
         newGrid[i][j] = maybePopulateCell(birthProb, redMajorProb, blueMajorProb)
       else:
-        newGrid[i][j] = updateCell(grid, i, j, stats, birthProb,
+        newGrid[i][j] = updateCell(grid, i, j, stepStats, birthProb,
             redMajorProb, blueMajorProb, check)
-  return (newGrid, stats)
+  updatePdfStats(fullStats, stepStats)
+  return newGrid
+
+# Updates the total set of stats for the PDF based
+# on the number of deaths per ant type for a single step
+def updatePdfStats(stats, stepStats):
+  for antType in stepStats:
+    stats[antType][stepStats[antType]] = stats[antType][stepStats[antType]] + 1
 
 def updateCell(grid, r, c, stats, birthProb,
     redMajorProb, blueMajorProb, check):
   if grid[r][c] == REDMINOR:
     isDeath = isDeathCondition(grid, r, c, check, 1, 1)
     if isDeath:
-      stats["minred"] = stats["minred"] + 1 # +1 to no. of minor ant deaths
+      stats["minred"] = stats["minred"] + 1
       return fillAntDeathCell(grid, r, c, isDeath, birthProb,
           redMajorProb, blueMajorProb)
     else:
@@ -83,7 +96,7 @@ def updateCell(grid, r, c, stats, birthProb,
   elif grid[r][c] == REDMAJOR:
     isDeath = isDeathCondition(grid, r, c, check, 4, 1)
     if isDeath:
-      stats["majred"] = stats["majred"] + 1 # +1 to no. of major ant deaths
+      stats["majred"] = stats["majred"] + 1
       return fillAntDeathCell(grid, r, c, isDeath, birthProb,
           redMajorProb, blueMajorProb)
     else:
@@ -91,7 +104,7 @@ def updateCell(grid, r, c, stats, birthProb,
   elif grid[r][c] == BLUEMAJOR:
     isDeath = isDeathCondition(grid, r, c, check, 4, 1)
     if isDeath:
-      stats["majblue"] = stats["majblue"] + 1 # +1 to no. of major ant deaths
+      stats["majblue"] = stats["majblue"] + 1
       return fillAntDeathCell(grid, r, c, isDeath, birthProb,
           redMajorProb, blueMajorProb)
     else:
