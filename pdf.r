@@ -12,14 +12,15 @@ graph_file <- function(infile, outfile) {
   par(new=TRUE)
   plot(density(file_contents$majblue), col="blue", axes=FALSE, xlab="", ylab="", main="")
   par(new=TRUE)
-  plot(density(file_contents$minred), col="yellow", axes=FALSE, xlab="", ylab="", main="")
+  plot(density(file_contents$minred), col="orange", axes=FALSE, xlab="", ylab="", main="")
   par(new=TRUE)
   plot(density(file_contents$majred), col="red", axes=FALSE, xlab="", ylab="", main="")
+  legend(x = 150, y = 0.05, c("Blue Minors", "Blue Majors", "Red Minors", "Red Majors"),
+         col=c("green", "blue", "orange", "red"), lty=1, bty="n")
   axis(1)
   axis(2)
   box()
-  title(main="Minor Ant Deaths", xlab="Minor ant deaths per time step",
-        ylab="Density")
+  title(main="Ant Death PDFs", xlab="Number of Deaths", ylab="Density")
   dev.off()
 }
 

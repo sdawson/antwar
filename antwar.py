@@ -79,7 +79,7 @@ def updatePdfStats(stats, stepStats):
 def updateCell(grid, r, c, stats, birthProb,
     redMajorProb, blueMajorProb, check):
   if grid[r][c] == REDMINOR:
-    isDeath = isDeathCondition(grid, r, c, check, 1, 1)
+    isDeath = isDeathCondition(grid, r, c, check, 2, 1)
     if isDeath:
       stats["minred"] = stats["minred"] + 1
       return fillAntDeathCell(grid, r, c, isDeath, birthProb,
@@ -87,7 +87,7 @@ def updateCell(grid, r, c, stats, birthProb,
     else:
       return grid[r][c]
   elif grid[r][c] == BLUEMINOR:
-    isDeath = isDeathCondition(grid, r, c, check, 1, 1)
+    isDeath = isDeathCondition(grid, r, c, check, 2, 1)
     if isDeath:
       stats["minblue"] = stats["minblue"] + 1
       return fillAntDeathCell(grid, r, c, isDeath, birthProb,
@@ -135,17 +135,14 @@ def isDeathCondition(grid, r, c, check, noOfMinors, noOfMajors):
   minorCount = 0
   majorCount = 0
   for (i, j) in genCheckList(grid, r, c, check):
-    if (grid[r][c] == BLUEMAJOR
-        or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMAJOR):
+    #print "checking (%s, %s) for (%s, %s)" % (i, j, r, c)
+    if getCellColour(grid[r][c]) == "BLUE" and (grid[i][j] == REDMAJOR):
       majorCount = majorCount + 1
-    elif (grid[r][c] == BLUEMAJOR
-          or grid[r][c] == BLUEMINOR) and (grid[i][j] == REDMINOR):
+    elif getCellColour(grid[r][c]) == "BLUE" and (grid[i][j] == REDMINOR):
       minorCount = minorCount + 1
-    elif (grid[r][c] == REDMAJOR
-          or grid[r][c] == REDMINOR) and (grid[i][j] == BLUEMAJOR):
+    elif getCellColour(grid[r][c]) == "RED" and (grid[i][j] == BLUEMAJOR):
       majorCount = majorCount + 1
-    elif (grid[r][c] == REDMAJOR
-          or grid[r][c] == REDMINOR) and (grid[i][j] == BLUEMINOR):
+    elif getCellColour(grid[r][c]) == "RED" and (grid[i][j] == BLUEMINOR):
       minorCount = minorCount + 1
   if minorCount >= noOfMinors:
     return "minor"
