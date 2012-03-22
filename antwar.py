@@ -26,8 +26,8 @@ def main():
   fullStats = {"minblue": [0]*gridSize**2, "minred": [0]*gridSize**2,
       "majblue": [0]*gridSize**2, "majred": [0]*gridSize**2}
   
-  currentDate = datetime.datetime.now().strftime("%Y%m%d%H%M")
-  filenamePrefix = "antsim-p%.2f-rf%.2f-bf%.2f-steps%d-size%d-" % (birthProb,
+  currentDate = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+  filenamePrefix = "antsim-p%.3f-rf%.3f-bf%.3f-steps%d-size%d-" % (birthProb,
       redMajorProb, blueMajorProb, noOfSteps, int(sys.argv[1]))
   filename = ''.join([filenamePrefix, currentDate, ".out"])
   print filename
@@ -42,11 +42,14 @@ def main():
       os.system('cls' if os.name == 'nt' else 'clear')
       printGrid(grid)
       print i
-  for stati in range(len(fullStats["minblue"])):
-    if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
-    or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
-      f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
-        fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
+    if allOneTribe(grid):
+      f.write("%s\t%d" % (getCellColour(grid[0][0]), i))
+      break
+  #for stati in range(len(fullStats["minblue"])):
+  #  if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
+  #  or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
+  #    f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
+  #      fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
   f.close()
   colorama.deinit()
 
@@ -69,6 +72,15 @@ def updateGrid(grid, birthProb,
             redMajorProb, blueMajorProb, check)
   updatePdfStats(fullStats, stepStats)
   return newGrid
+
+def allOneTribe(grid):
+  (r, c) = grid.shape
+  initColour = getCellColour(grid[0][0])
+  for i in range(r):
+    for j in range(c):
+      if getCellColour(grid[i][j]) != initColour:
+        return False
+  return True
 
 # Updates the total set of stats for the PDF based
 # on the number of deaths per ant type for a single step
