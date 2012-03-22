@@ -98,6 +98,44 @@ death counts for both major and minor ants are low and similar.  This is
 because most of the ants from each tribe aren't located at the edge of a tribal 
 region, so they have no opportunity to get involved in battles with enemy ants.
 
-\item Having different f values for 
+\item Having different f values for the two tribes gives an immediate advantage 
+to one tribe.  In the case where $p = 0.21$, ten 1000 step simulations were 
+run, and the number of steps taken for the board to be completely covered by a 
+single tribe were logged then averaged.  The results for different values of 
+$f$ are given below:
+
+\begin{itemize}
+\item For red $f = 0.025$ and blue $f = 0.04$, the board was completely blue 
+after an average of 478.8 steps.
+\item For red $f = 0.01$ and blue $f = 0.04$, the board was blue after an 
+average of  steps.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{$f$} & \textbf{Red $p$} & \textbf{Blue $p$} & \textbf{End Colour} & \# \textbf{Steps} \\ \hline
+0.21 & 0.025 & 0.04 & blue & 478.8 \\ \hline
+0.21 & 0.01 & 0.04 & blue & 280 \\ \hline
+0.21 & 0.035 & 0.04 & blue & 821 \\ \hline
+\end{tabular}
+\end{center}
+
+\item Adjusting the simulation to study the behaviour tribes of old and young 
+ants requires some adjustments to the simulation rules.  The adjustments that 
+were made are as follows:
+
+\begin{itemize}
+\item[-]Old ants are infertile, so they will never repopulate the cells of 
+enemy ants they destroy.
+\item[-]Young ants are fertile, so they will repopulate the cells of defeated 
+ants with the same probability as when they appear on empty cells
+\item[-]According to Cassil's work, "the more expendable" and ant is, "the more 
+likely it is to end up in harm's way".  Thus the old ants are required to fight 
+always
+\item[-]The young ants will flee (if possible) if their cell is surrounded by
+more enemy ants than friendly ants.  Fleeing is defined as moving into a nearby 
+empty square rather than fighting.
+
 \end{enumerate}
 hasdlfkjasd
