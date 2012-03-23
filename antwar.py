@@ -46,10 +46,8 @@ def main():
     #  print "%s\t%d" % (getCellColour(grid[0][0]), i)
     #  break
   for stati in range(len(fullStats["minblue"])):
-    if fullStats["minblue"][stati] != 0 or fullStats["majblue"][stati] != 0 \
-    or fullStats["minred"][stati] != 0 or fullStats["majred"][stati] !=0:
-      f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
-        fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
+    f.write("%d\t%d\t%d\t%d\t%d\n" % (stati, fullStats["minblue"][stati],
+      fullStats["majblue"][stati], fullStats["minred"][stati], fullStats["majred"][stati]))
   f.close()
   colorama.deinit()
 
