@@ -13,35 +13,22 @@ graph_file <- function(infile, outfile) {
   # Extract every column except the first (which contains the general number of deaths per step)
   deathColumns <- file_contents[-(1:1)]
   str(deathColumns)
-
-  #pdf(file = outfile)
-  ## Plotting minor ant pdf
-  #if (isYoungAndOld) {
-  #  plot(density(file_contents$oldblue), col="green", axes=FALSE, xlab="", ylab="", main="")
-  #  par(new=TRUE)
-  #  plot(density(file_contents$youngblue), col="blue", axes=FALSE, xlab="", ylab="", main="")
-  #  par(new=TRUE)
-  #  plot(density(file_contents$oldred), col="orange", axes=FALSE, xlab="", ylab="", main="")
-  #  par(new=TRUE)
-  #  plot(density(file_contents$youngred), col="red", axes=FALSE, xlab="", ylab="", main="")
-  #  legend(x = 50, y = 0.05, c("Old Blue", "Young Blue", "Old Red", "Young Red"),
-  #        col=c("green", "blue", "orange", "red"), lty=1, bty="n")
-  #} else {
-  #  plot(density(file_contents$minblue), col="green", axes=FALSE, xlab="", ylab="", main="")
-  #  par(new=TRUE)
-  #  plot(density(file_contents$majblue), col="blue", axes=FALSE, xlab="", ylab="", main="")
-  #  par(new=TRUE)
-  #  plot(density(file_contents$minred), col="orange", axes=FALSE, xlab="", ylab="", main="")
-  #  par(new=TRUE)
-  #  plot(density(file_contents$majred), col="red", axes=FALSE, xlab="", ylab="", main="")
-  #  legend(x = 500, y = 0.10, c("Blue Minors", "Blue Majors", "Red Minors", "Red Majors"),
-  #        col=c("green", "blue", "orange", "red"), lty=1, bty="n")
-  #}
-  #axis(1)
-  #axis(2)
-  #box()
-  #title(main="Ant Death PDFs", xlab="Number of Deaths", ylab="Density")
-  #dev.off()
+  cat(ncol(deathColumns), '\n')
+  
+  pdf(file = outfile)
+  for (i in 1:ncol(deathColumns)) {
+    colour = colours[i] # Assumes there are <= 12 plots
+    plot(density(deathColumns[[i]]), col=colour[i], axes=FALSE, xlab="", 
+         ylab="", main="")
+    par(new=T)
+  }
+  legend("topright", names(deathColumns), col=colours[1:ncol(deathColumns)], 
+         lty=1, bty="n")
+  axis(1)
+  axis(2)
+  box()
+  title(main="Ant Death PDFs", xlab="Number of Deaths", ylab="Density")
+  dev.off()
 }
 
 args <- commandArgs(trailingOnly = TRUE)
