@@ -34,5 +34,4 @@ class AntStats(object):
     titles = ["NoOfDeaths"]
     for tribe in self.tribes:
       titles.extend([tribe + "MajDeath", tribe + "MinDeath"])
-    titles.append("\n")
-    return "\t".join(titles)
+    return "\t".join(titles) + "\n"
