@@ -12,7 +12,7 @@ def main():
   #print initGrid.antStats.tribes
   #print initGrid.antStats.majorDeaths
   #print initGrid.antStats.minorDeaths
-  initGrid.antStats.writeToFile("2teams-4000steps-0.5p-0.25f-diag")
+  initGrid.antStats.writeToFile("2teams-4000steps-0.04p-0.12f-diag")
 
 if __name__ == "__main__":
   main()
