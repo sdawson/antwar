@@ -3,8 +3,9 @@ class AntStats(object):
   def __init__(self, tribes, size):
     self.tribes = tribes
     # A list of number of deaths per step, one list per tribe
-    self.majorDeaths = [[0]*size**2]*len(tribes)
-    self.minorDeaths = [[0]*size**2]*len(tribes)
+    # TODO: Problem is with the following lines, since each sublist is a duplicate of the other.
+    self.majorDeaths = [[0]*size**2 for n in range(len(tribes))] #[[0]*size**2]*len(tribes)
+    self.minorDeaths = [[0]*size**2 for n in range(len(tribes))] #*len(tribes)
 
   # Takes lists of major and minor ant death counts
   # for each tribe, and updates the total counts
