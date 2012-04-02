@@ -23,13 +23,7 @@ graph_file <- function(infile, outfile) {
   plot(density(deathColumns[[3]]), col=colours[3], axes=FALSE, xlab="", ylab="", main="")# xlim=c(-30, 100))
   par(new=T)
   plot(density(deathColumns[[4]]), col=colours[4], axes=FALSE, xlab="", ylab="", main="")# xlim=c(-30, 100))
-  #for (i in 1:ncol(deathColumns)) {
-  #  cat("i", i, "\n")
-  #  colour = colours[i] # Assumes there are <= 12 plots
-  #  plot(density(deathColumns[[i]]), col=colour[i], axes=FALSE, xlab="", 
-  #       ylab="", main="")
-  #  par(new=T)
-  #}
+
   legend("topright", names(deathColumns), col=colours[1:ncol(deathColumns)], 
          lty=1, bty="n")
   axis(1)
